@@ -1,0 +1,10 @@
+<h2>Request Count By Name</h2>
+
+<button class="btn btn-primary" (click)="getRequestCount()">Get Request Count</button>
+
+<div *ngIf="requestCount">
+  <h3>Result:</h3>
+  <ul>
+    <li *ngFor="let item of requestCount | keyvalue">{{item.key}} - {{item.value}}</li>
+  </ul>
+</div>
