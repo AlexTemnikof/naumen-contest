@@ -1,6 +1,8 @@
 package com.example.contestApp.service;
 
+import com.example.contestApp.entities.Frequency;
 import com.example.contestApp.entities.Person;
+import com.example.contestApp.repositories.FrequencyRepository;
 import com.example.contestApp.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,13 +24,17 @@ public class AppService {
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private FrequencyRepository frequencyRepository;
+
     @PostConstruct
     public void init(){
         Path path = Paths.get("src/main/resources/data.txt");
         try (Stream<String> lines = Files.lines(path)) {
             lines.forEach(line -> {
                 String[] parts = line.split("_");
-                personRepository.save(new Person(parts[0], Integer.parseInt(parts[1])));
+                Person p = new Person(parts[0], Integer.parseInt(parts[1]));
+                personRepository.save(p);
             });
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -44,6 +50,15 @@ public class AppService {
     }
 
     public List<Integer> getAge(String name) {
+        Frequency temp = frequencyRepository.findByName(name);
+        if (temp != null){
+            temp.updateFrequency();
+            frequencyRepository.save(temp);
+        }
+        else {
+            temp = new Frequency(name);
+            frequencyRepository.save(temp);
+        }
         List<Integer> nameAge = new ArrayList<>();
         List<Person> persons = personRepository.findByName(name);
         if (persons.size() != 0) {
@@ -58,13 +73,13 @@ public class AppService {
     }
 
     public Map<String, Integer> getFrequency() {
-        Map<String, Integer> frequencyMap = new HashMap<>();
-        for (Person person : personRepository.findAll()) {
-            String name = person.getName();
-            int count = frequencyMap.getOrDefault(name, 0);
-            frequencyMap.put(name, count + 1);
+        Map<String, Integer> result = new HashMap<>();
+        List<Frequency> frequencies = frequencyRepository.findAll();
+        for (Frequency f : frequencies){
+            result.put(f.getName(), f.getFrequency());
         }
-        return frequencyMap;
+
+        return result;
     }
 
     public String getNameWithMaxAge() {

@@ -7,12 +7,14 @@ import { AppComponent } from './app.component';
 import { PersonListComponent } from './person-list/person-list.component';
 import { GetAgeByNameComponent } from './get-age-by-name/get-age-by-name.component';
 import {PersonService} from "./person.service";
+import { FrequencyFormComponent } from './frequency-form/frequency-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PersonListComponent,
-    GetAgeByNameComponent
+    GetAgeByNameComponent,
+    FrequencyFormComponent
   ],
   imports: [
     BrowserModule,

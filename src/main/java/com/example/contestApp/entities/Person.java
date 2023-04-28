@@ -1,12 +1,13 @@
 package com.example.contestApp.entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "persons")
 public class Person {
 
-    public Person(){}
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
@@ -17,6 +18,8 @@ public class Person {
 
     @Column(name = "age")
     private int age;
+
+    public Person(){}
 
     public Person(String name, int age) {
         this.name = name;
