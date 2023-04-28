@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,12 +43,17 @@ public class AppService {
         return personRepository.findAll();
     }
 
-    public int getAge(String name) {
-        Person person = personRepository.findByName(name);
-        if (person != null) {
-            return person.getAge();
+    public List<Integer> getAge(String name) {
+        List<Integer> nameAge = new ArrayList<>();
+        List<Person> persons = personRepository.findByName(name);
+        if (persons.size() != 0) {
+            for (Person p : persons) {
+                nameAge.add(p.getAge());
+            }
+            return nameAge;
         } else {
-            return (int) (Math.random() * 100); // произвольное положительное число, если нет информации о возрасте
+            nameAge.add((int) (Math.random() * 100));
+            return nameAge; // произвольное положительное число, если нет информации о возрасте
         }
     }
 

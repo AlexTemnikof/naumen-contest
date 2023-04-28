@@ -3,15 +3,14 @@ package com.example.contestApp.controller;
 import com.example.contestApp.entities.Person;
 import com.example.contestApp.service.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:4200")
 public class PersonController {
     @Autowired
     private AppService appService;
@@ -21,15 +20,15 @@ public class PersonController {
         appService.addPerson(name, age);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/persons")
     public List<Person> getAll(){return appService.getAll();}
 
-    @GetMapping("/getAge")
-    public int getAge(@RequestParam String name) {
+    @GetMapping("/age")
+    public List<Integer> getAge(@RequestParam String name) {
         return appService.getAge(name);
     }
 
-    @GetMapping("/getFrequency")
+    @GetMapping("/frequency")
     public Map<String, Integer> getFrequency() {
         return appService.getFrequency();
     }
