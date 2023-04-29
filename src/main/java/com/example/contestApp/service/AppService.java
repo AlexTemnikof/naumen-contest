@@ -4,18 +4,23 @@ import com.example.contestApp.entities.Frequency;
 import com.example.contestApp.entities.Person;
 import com.example.contestApp.repositories.FrequencyRepository;
 import com.example.contestApp.repositories.PersonRepository;
+import org.apache.tomcat.util.json.JSONParser;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.http.HttpClient;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Service
@@ -52,7 +57,11 @@ public class AppService {
             nameAge.add(p.getAge());
         }
         if (nameAge.isEmpty()) {
-            nameAge.add((int) (Math.random() * 100));
+            try {
+                nameAge.add(getAgeFromApi(name));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         return nameAge;
     }
@@ -90,5 +99,24 @@ public class AppService {
             temp = new Frequency(name);
             frequencyRepository.save(temp);
         }
+    }
+
+    private Integer getAgeFromApi(String name) throws IOException{
+
+        URL url = new URL("https://api.agify.io?name=" + name);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer content = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+        in.close();
+        con.disconnect();
+        JSONObject obj = new JSONObject(content.toString());
+        return (Integer) obj.get("age");
+
     }
 }
