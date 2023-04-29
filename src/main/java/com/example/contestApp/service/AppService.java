@@ -1,12 +1,12 @@
 package com.example.contestApp.service;
 
+import com.example.contestApp.dto.PersonDTO;
 import com.example.contestApp.entities.Frequency;
 import com.example.contestApp.entities.Person;
+import com.example.contestApp.mapper.PersonMapper;
 import com.example.contestApp.repositories.FrequencyRepository;
 import com.example.contestApp.repositories.PersonRepository;
-import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,14 +24,22 @@ import java.util.stream.Stream;
 @Service
 public class AppService {
 
-    @Autowired
-    private PersonRepository personRepository;
+    private final PersonRepository personRepository;
 
-    @Autowired
-    private FrequencyRepository frequencyRepository;
+    private final FrequencyRepository frequencyRepository;
+
+    private final PersonMapper personMapper;
+
+    public AppService(PersonRepository personRepository, FrequencyRepository frequencyRepository, PersonMapper personMapper) {
+        this.personRepository = personRepository;
+        this.frequencyRepository = frequencyRepository;
+        this.personMapper = personMapper;
+    }
 
     @PostConstruct
     public void init(){
+        personRepository.deleteAll();
+        frequencyRepository.deleteAll();
         Path path = Paths.get("src/main/resources/data.txt");
         try (Stream<String> lines = Files.lines(path)) {
             lines.forEach(line -> {
@@ -45,8 +51,9 @@ public class AppService {
             throw new RuntimeException(e);
         }
     }
-    public List<Person> getAll(){
-        return personRepository.findAll();
+    public List<PersonDTO> getAll(){
+
+        return personMapper.toDTOAll(personRepository.findAll());
     }
 
     public List<Integer> getAge(String name) {
@@ -76,7 +83,7 @@ public class AppService {
         return result;
     }
 
-    public Person getNameWithMaxAge() {
+    public PersonDTO getNameWithMaxAge() {
         Person personWithMaxAge = null;
         int maxAge = 0;
         for (Person person : personRepository.findAll()) {
@@ -86,7 +93,7 @@ public class AppService {
                 personWithMaxAge = person;
             }
         }
-        return personWithMaxAge;
+        return personMapper.toDTO(personWithMaxAge);
     }
 
     private void updateFrequency(String name){

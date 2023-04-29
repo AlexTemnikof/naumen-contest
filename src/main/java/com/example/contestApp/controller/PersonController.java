@@ -1,5 +1,6 @@
 package com.example.contestApp.controller;
 
+import com.example.contestApp.dto.PersonDTO;
 import com.example.contestApp.entities.Person;
 import com.example.contestApp.service.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class PersonController {
     private AppService appService;
 
     @GetMapping("/persons")
-    public List<Person> getAll(){return appService.getAll();}
+    public List<PersonDTO> getAll(){return appService.getAll();}
 
     @GetMapping("/age")
     public List<Integer> getAge(@RequestParam String name) {
@@ -29,7 +30,7 @@ public class PersonController {
     }
 
     @GetMapping("/maxage")
-    public Person getNameWithMaxAge() {
+    public PersonDTO getNameWithMaxAge() {
         return appService.getNameWithMaxAge();
     }
 }

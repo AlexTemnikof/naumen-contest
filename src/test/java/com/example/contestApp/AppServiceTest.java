@@ -1,9 +1,11 @@
+//package com.example.contestApp;
+//
+//import com.example.contestApp.service.AppService;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.beans.factory.annotation.Qualifier;
 //import org.springframework.boot.test.context.SpringBootTest;
 //
-//import java.com.example.contestApp.service.AppService;
 //import java.util.Map;
 //
 //import static org.junit.jupiter.api.Assertions.assertTrue;
