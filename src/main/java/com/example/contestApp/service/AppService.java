@@ -40,36 +40,21 @@ public class AppService {
             throw new RuntimeException(e);
         }
     }
-
-    public void addPerson(String name, int age) {
-        personRepository.save(new Person(name, age));
-    }
-
     public List<Person> getAll(){
         return personRepository.findAll();
     }
 
     public List<Integer> getAge(String name) {
-        Frequency temp = frequencyRepository.findByName(name);
-        if (temp != null){
-            temp.updateFrequency();
-            frequencyRepository.save(temp);
-        }
-        else {
-            temp = new Frequency(name);
-            frequencyRepository.save(temp);
-        }
+        this.updateFrequency(name);
         List<Integer> nameAge = new ArrayList<>();
         List<Person> persons = personRepository.findByName(name);
-        if (persons.size() != 0) {
-            for (Person p : persons) {
-                nameAge.add(p.getAge());
-            }
-            return nameAge;
-        } else {
-            nameAge.add((int) (Math.random() * 100));
-            return nameAge; // произвольное положительное число, если нет информации о возрасте
+        for (Person p : persons) {
+            nameAge.add(p.getAge());
         }
+        if (nameAge.isEmpty()) {
+            nameAge.add((int) (Math.random() * 100));
+        }
+        return nameAge;
     }
 
     public Map<String, Integer> getFrequency() {
@@ -82,16 +67,28 @@ public class AppService {
         return result;
     }
 
-    public String getNameWithMaxAge() {
-        String personWithMaxAge = null;
+    public Person getNameWithMaxAge() {
+        Person personWithMaxAge = null;
         int maxAge = 0;
         for (Person person : personRepository.findAll()) {
             int age = person.getAge();
             if (age > maxAge) {
                 maxAge = age;
-                personWithMaxAge = person.toString();
+                personWithMaxAge = person;
             }
         }
         return personWithMaxAge;
+    }
+
+    private void updateFrequency(String name){
+        Frequency temp = frequencyRepository.findByName(name);
+        if (temp != null){
+            temp.updateFrequency();
+            frequencyRepository.save(temp);
+        }
+        else {
+            temp = new Frequency(name);
+            frequencyRepository.save(temp);
+        }
     }
 }

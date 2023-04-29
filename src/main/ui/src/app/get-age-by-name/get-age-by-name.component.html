@@ -7,7 +7,7 @@
 </form>
 
 <div class="mt-5" *ngIf="ages.length > 0">
-  <h3>Возраста для людей с фамилией {{ nameForm.controls['name'].value }}:</h3>
+  <h3>Ages for person {{ nameForm.controls['name'].value }}:</h3>
   <ul>
     <li *ngFor="let age of ages">{{ age }}</li>
   </ul>

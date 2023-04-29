@@ -28,4 +28,9 @@ export class PersonService {
     return this.http.get<Map<String, Number>>(url);
   }
 
+  public getPersonWithMaxAge(): Observable<Person> {
+    const url = `${this.apiUrl}/maxage`;
+    return this.http.get<Person>(url);
+  }
+
 }

@@ -15,11 +15,6 @@ public class PersonController {
     @Autowired
     private AppService appService;
 
-    @PostMapping("/addPerson")
-    public void addPerson(@RequestParam String name, @RequestParam int age) {
-        appService.addPerson(name, age);
-    }
-
     @GetMapping("/persons")
     public List<Person> getAll(){return appService.getAll();}
 
@@ -33,8 +28,8 @@ public class PersonController {
         return appService.getFrequency();
     }
 
-    @GetMapping("/getNameWithMaxAge")
-    public String getNameWithMaxAge() {
+    @GetMapping("/maxage")
+    public Person getNameWithMaxAge() {
         return appService.getNameWithMaxAge();
     }
 }
