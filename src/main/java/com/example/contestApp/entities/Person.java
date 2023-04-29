@@ -1,7 +1,5 @@
 package com.example.contestApp.entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 
 @Entity

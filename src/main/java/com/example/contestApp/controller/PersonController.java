@@ -1,7 +1,6 @@
 package com.example.contestApp.controller;
 
 import com.example.contestApp.dto.PersonDTO;
-import com.example.contestApp.entities.Person;
 import com.example.contestApp.service.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
